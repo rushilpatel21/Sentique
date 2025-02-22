@@ -4,7 +4,7 @@ from urllib.parse import quote
 from playwright.sync_api import sync_playwright
 from bs4 import BeautifulSoup
 
-def scrape_x_search(output_csv="x_search_results.csv", scrolls=15):
+def scrape_x_search(output_csv="x_search_results.csv", scrolls=15, name = "Oyo"):
     """
     Scrape textual tweets from X.com using a custom query:
     "Oyo (#Oyo) lang:en -filter:links", which returns English tweets for #Oyo
@@ -15,7 +15,7 @@ def scrape_x_search(output_csv="x_search_results.csv", scrolls=15):
       - scrolls: Number of scroll actions to load more tweets.
     """
     # Hardcode the query as specified.
-    query = "Oyo (#Oyo) lang:en -filter:links"
+    query = f"{name} (#{name}) lang:en -filter:links"
     encoded_query = quote(query)
     # You can adjust sort_type if desired; here we use "top" for popular/trending tweets.
     search_url = f"https://x.com/search?q={encoded_query}&f=top"
