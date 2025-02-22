@@ -194,7 +194,7 @@ def reviews_all(app_id: str, sleep_milliseconds: int = 0, **kwargs) -> list:
 
     return result
 
-reviews_count = 1000
+reviews_count = 5000
 
 result = []
 continuation_token = None
