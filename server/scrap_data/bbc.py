@@ -1,5 +1,6 @@
 import asyncio
 import aiohttp
+import csv
 from bs4 import BeautifulSoup
 from textblob import TextBlob
 import argparse
@@ -53,21 +54,17 @@ async def fetch_article_details(session: aiohttp.ClientSession, url: str, websit
     except Exception as e:
         details["error"] = str(e)
         return details
-    
+
     soup = BeautifulSoup(html, 'html.parser')
     
     # Extract detailed title:
-    # Prefer meta tag og:title if available.
     og_title = soup.find("meta", property="og:title")
     if og_title and og_title.get("content"):
         details["detail_title"] = og_title["content"]
-    else:
-        # Fallback to the <title> tag
-        if soup.title:
-            details["detail_title"] = soup.title.get_text(strip=True)
+    elif soup.title:
+        details["detail_title"] = soup.title.get_text(strip=True)
     
     # Extract publication date if available:
-    # Check common meta names or properties.
     pub_date = None
     for attr in [("property", "article:published_time"), ("name", "pubdate"), ("name", "date")]:
         tag = soup.find("meta", attrs={attr[0]: attr[1]})
@@ -77,7 +74,6 @@ async def fetch_article_details(session: aiohttp.ClientSession, url: str, websit
     details["publication_date"] = pub_date
     
     # Extract main article content.
-    # First try to get text inside an <article> tag.
     article_tag = soup.find("article")
     if article_tag:
         paragraphs = article_tag.find_all("p")
@@ -110,12 +106,10 @@ async def get_sentiment_for_website(session: aiohttp.ClientSession, website: dic
             html = await fetch(session, url)
             search_results = parse_search_results(website["name"], html)
             if not search_results:
-                # If no results on this page, break out.
+                # No results found; break out.
                 break
-            # For each search result, fetch article details concurrently.
-            tasks = []
-            for title, link in search_results:
-                tasks.append(fetch_article_details(session, link, website["name"]))
+            # Fetch article details concurrently.
+            tasks = [fetch_article_details(session, link, website["name"]) for title, link in search_results]
             articles_details = await asyncio.gather(*tasks)
             for art in articles_details:
                 if art.get("content"):
@@ -123,7 +117,7 @@ async def get_sentiment_for_website(session: aiohttp.ClientSession, website: dic
                 all_details.append(art)
             await asyncio.sleep(1)
         except Exception as e:
-            return {"website": website["name"], "sentiment": None, "error": str(e)}
+            return {"website": website["name"], "sentiment": None, "error": str(e), "articles": []}
     sentiment = analyze_sentiment(all_article_text) if all_article_text.strip() else None
     return {"website": website["name"], "sentiment": sentiment, "articles": all_details}
 
@@ -133,32 +127,53 @@ async def get_company_sentiment(company: str) -> list:
         results = await asyncio.gather(*tasks)
         return results
 
+def write_to_csv(results: list, filename: str = "output.csv"):
+    """
+    Writes the analysis results to a CSV file.
+    Each row represents an article with details and includes the website overall sentiment.
+    """
+    with open(filename, mode="w", newline="", encoding="utf-8") as csvfile:
+        fieldnames = ["Website", "Overall Sentiment", "Article Title", "URL", "Publication Date", "Content Snippet"]
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+        writer.writeheader()
+        for result in results:
+            website_name = result.get("website", "N/A")
+            overall_sentiment = result.get("sentiment", "N/A")
+            articles = result.get("articles", [])
+            if articles:
+                for art in articles:
+                    snippet = art.get("content", "")[:]
+                    writer.writerow({
+                        "Website": website_name,
+                        "Overall Sentiment": overall_sentiment,
+                        "Article Title": art.get("detail_title", "N/A"),
+                        "URL": art.get("url", "N/A"),
+                        "Publication Date": art.get("publication_date", "N/A"),
+                        "Content Snippet": snippet + ("..." if len(art.get('content', "")) > 300 else "")
+                    })
+            else:
+                # If no articles or an error occurred, record the error message.
+                error = result.get("error", "No articles found")
+                writer.writerow({
+                    "Website": website_name,
+                    "Overall Sentiment": overall_sentiment,
+                    "Article Title": "Error",
+                    "URL": "",
+                    "Publication Date": "",
+                    "Content Snippet": error
+                })
+
 def main():
-    parser = argparse.ArgumentParser(description="Company Detailed Sentiment Analyzer")
+    parser = argparse.ArgumentParser(description="Company Detailed Sentiment Analyzer with CSV Output")
     parser.add_argument("--company", type=str, default="Netflix", help="Company name to analyze")
     args = parser.parse_args()
     company = args.company
 
     results = asyncio.run(get_company_sentiment(company))
-    for result in results:
-        website = result["website"]
-        if result.get("error"):
-            print(f"{website} - Error: {result['error']}")
-        else:
-            print(f"{website} - Overall Sentiment score: {result['sentiment']}")
-            print("Articles:")
-            for idx, art in enumerate(result.get("articles", []), 1):
-                print(f"  {idx}. Title: {art.get('detail_title', 'N/A')}")
-                print(f"     URL: {art.get('url', 'N/A')}")
-                pub_date = art.get("publication_date")
-                if pub_date:
-                    print(f"     Publication Date: {pub_date}")
-                content = art.get("content", "")
-                # Show first 300 characters of content as a snippet.
-                snippet = content[:300] + ("..." if len(content) > 300 else "")
-                print(f"     Content snippet: {snippet}")
-                print("-" * 50)
-            print("=" * 80)
+    
+    # Write results to CSV file.
+    write_to_csv(results, filename="bbc.csv")
+    print("Results have been written to bbc.csv")
 
 if __name__ == "__main__":
     main()
