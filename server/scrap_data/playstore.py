@@ -17,7 +17,7 @@ def set_frame_style(df, caption="", font_size ='20px' ):
 
 import google_play_scraper
 
-app_id = 'com.facebook.katana'
+app_id = 'com.netflix.mediaclient'
 
 from google_play_scraper import Sort
 from google_play_scraper.constants.element import ElementSpecs
@@ -194,7 +194,7 @@ def reviews_all(app_id: str, sleep_milliseconds: int = 0, **kwargs) -> list:
 
     return result
 
-reviews_count = 100
+reviews_count = 1000
 
 result = []
 continuation_token = None
