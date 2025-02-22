@@ -7,7 +7,7 @@ from bs4 import BeautifulSoup
 def scrape_x_search(output_csv="x_search_results.csv", scrolls=5):
     """
     Scrape textual tweets from X.com using a custom query:
-    "Uber (#Uber) lang:en -filter:links", which returns English tweets for #Uber
+    "Oyo (#Oyo) lang:en -filter:links", which returns English tweets for #Oyo
     without links.
     
     Parameters:
@@ -15,7 +15,7 @@ def scrape_x_search(output_csv="x_search_results.csv", scrolls=5):
       - scrolls: Number of scroll actions to load more tweets.
     """
     # Hardcode the query as specified.
-    query = "Uber (#Uber) lang:en -filter:links"
+    query = "Oyo (#Oyo) lang:en -filter:links"
     encoded_query = quote(query)
     # You can adjust sort_type if desired; here we use "top" for popular/trending tweets.
     search_url = f"https://x.com/search?q={encoded_query}&f=top"
@@ -57,7 +57,7 @@ def scrape_x_search(output_csv="x_search_results.csv", scrolls=5):
     # Save results to a CSV file.
     df = pd.DataFrame(tweets, columns=["Tweet"])
     df.to_csv(output_csv, index=False)
-    print(df)
+    print(tweets)
     print(f"Saved {len(df)} tweets to {output_csv}")
 
 if __name__ == "__main__":
