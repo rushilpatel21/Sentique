@@ -10,7 +10,7 @@ websites = [
     {
         "name": "BBC",
         "url": "https://www.bbc.co.uk/search?q={company}&d=SEARCH_PS&page={page}",
-        "pages": 5
+        "pages": 20
     }
 ]
 
@@ -165,15 +165,15 @@ def write_to_csv(results: list, filename: str = "output.csv"):
 
 def main():
     parser = argparse.ArgumentParser(description="Company Detailed Sentiment Analyzer with CSV Output")
-    parser.add_argument("--company", type=str, default="Netflix", help="Company name to analyze")
+    parser.add_argument("--company", type=str, default="Uber", help="Company name to analyze")
     args = parser.parse_args()
     company = args.company
-
+    print(f"The company name is set to '{company}'")
     results = asyncio.run(get_company_sentiment(company))
     
     # Write results to CSV file.
-    write_to_csv(results, filename="bbc.csv")
-    print("Results have been written to bbc.csv")
+    write_to_csv(results, filename="uber_bbc.csv")
+    print("Results have been written to uber_bbc.csv")
 
 if __name__ == "__main__":
     main()

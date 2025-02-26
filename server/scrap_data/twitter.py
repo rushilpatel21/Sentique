@@ -4,7 +4,7 @@ from urllib.parse import quote
 from playwright.sync_api import sync_playwright
 from bs4 import BeautifulSoup
 
-def scrape_x_search(output_csv="x_search_results.csv", scrolls=15, name = "Oyo"):
+def scrape_x_search(output_csv="uber_x.csv", scrolls=20, name = "Uber"):
     """
     Scrape textual tweets from X.com using a custom query:
     "Oyo (#Oyo) lang:en -filter:links", which returns English tweets for #Oyo
