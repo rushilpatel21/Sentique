@@ -20,7 +20,7 @@
 
 2. Start the development server:
    ```sh
-   pnpm start
+   pnpm dev
    ```
 
 ---
