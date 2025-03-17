@@ -24,137 +24,86 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar"
 
-// This is sample data.
-const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
-  teams: [
-    {
-      name: "Acme Inc",
-      logo: GalleryVerticalEnd,
-      plan: "Enterprise",
-    },
-    {
-      name: "Acme Corp.",
-      logo: AudioWaveform,
-      plan: "Startup",
-    },
-    {
-      name: "Evil Corp.",
-      logo: Command,
-      plan: "Free",
-    },
-  ],
-  navMain: [
-    {
-      title: "Playground",
-      url: "#",
-      icon: SquareTerminal,
-      isActive: true,
-      items: [
-        {
-          title: "History",
-          url: "#",
-        },
-        {
-          title: "Starred",
-          url: "#",
-        },
-        {
-          title: "Settings",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Models",
-      url: "#",
-      icon: Bot,
-      items: [
-        {
-          title: "Genesis",
-          url: "#",
-        },
-        {
-          title: "Explorer",
-          url: "#",
-        },
-        {
-          title: "Quantum",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Documentation",
-      url: "#",
-      icon: BookOpen,
-      items: [
-        {
-          title: "Introduction",
-          url: "#",
-        },
-        {
-          title: "Get Started",
-          url: "#",
-        },
-        {
-          title: "Tutorials",
-          url: "#",
-        },
-        {
-          title: "Changelog",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Settings",
-      url: "#",
-      icon: Settings2,
-      items: [
-        {
-          title: "General",
-          url: "#",
-        },
-        {
-          title: "Team",
-          url: "#",
-        },
-        {
-          title: "Billing",
-          url: "#",
-        },
-        {
-          title: "Limits",
-          url: "#",
-        },
-      ],
-    },
-  ],
-  projects: [
-    {
-      name: "Design Engineering",
-      url: "#",
-      icon: Frame,
-    },
-    {
-      name: "Sales & Marketing",
-      url: "#",
-      icon: PieChart,
-    },
-    {
-      name: "Travel",
-      url: "#",
-      icon: Map,
-    },
-  ],
-}
+import { useUser } from "@/auth/hooks"
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const user = useUser(); // Fetch user details from the backend
+
+  // Handle loading state
+  if (!user) {
+    return <p>Loading...</p>;
+  }
+
+  const data = {
+    user: {
+      name: user.username || "Unknown User",
+      email: user.email || "No email available",
+      avatar: user.avatar || "/avatars/default.jpg",
+    },
+    teams: [
+      {
+        name: "SentimentIQ",
+        logo: GalleryVerticalEnd,
+        plan: "Enterprise",
+      },
+      {
+        name: "Acme Corp.",
+        logo: AudioWaveform,
+        plan: "Startup",
+      },
+      {
+        name: "Evil Corp.",
+        logo: Command,
+        plan: "Free",
+      },
+    ],
+    navMain: [
+      {
+        title: "Home",
+        url: "#",
+        icon: SquareTerminal,
+        isActive: true,
+      },
+      {
+        title: "View Report",
+        url: "#",
+        icon: Bot,
+      },
+      {
+        title: "Trend Analysis",
+        url: "#",
+        icon: BookOpen,
+      },
+      {
+        title: "Chat with your Data",
+        url: "#",
+        icon: Settings2,
+      },
+      {
+        title: "View Data Source",
+        url: "#",
+        icon: Settings2,
+      },
+    ],
+    projects: [
+      {
+        name: "Design Engineering",
+        url: "#",
+        icon: Frame,
+      },
+      {
+        name: "Sales & Marketing",
+        url: "#",
+        icon: PieChart,
+      },
+      {
+        name: "Travel",
+        url: "#",
+        icon: Map,
+      },
+    ],
+  }
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>

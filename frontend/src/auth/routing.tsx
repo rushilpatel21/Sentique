@@ -2,6 +2,7 @@ import {
     Navigate,
     useLocation
 } from 'react-router-dom'
+import { JSX } from 'react'
 import { useAuthChange, AuthChangeEvent, useAuthStatus } from './hooks.tsx'
 import { Flows, AuthenticatorType } from '@/lib/allAuth'
 

@@ -1,25 +1,24 @@
 import { getCSRFToken } from './cerfToken.ts'
-import {Register, Login} from "@/types/forms.ts";
+import { Register, Login } from "@/types/forms.ts";
 
 const Client = Object.freeze({
     APP: 'app',
     BROWSER: 'browser'
-} as const)
+} as const);
 
-type ClientType = typeof Client[keyof typeof Client]
+type ClientType = typeof Client[keyof typeof Client];
 
-const CLIENT: ClientType = Client.BROWSER
+const CLIENT: ClientType = Client.BROWSER;
 
-const BASE_URL: string = `/api/${CLIENT}/v1`
-const ACCEPT_JSON: { accept: string } = {
+const BASE_URL: string = `/api/${CLIENT}/v1`;
+const ACCEPT_JSON: Record<string, string> = {
     accept: 'application/json'
-
-}
+};
 
 export const AuthProcess = Object.freeze({
     LOGIN: 'login',
     CONNECT: 'connect'
-} as const)
+} as const);
 
 export const Flows = Object.freeze({
     VERIFY_EMAIL: 'verify_email',
@@ -32,9 +31,9 @@ export const Flows = Object.freeze({
     REAUTHENTICATE: 'reauthenticate',
     MFA_REAUTHENTICATE: 'mfa_reauthenticate',
     MFA_WEBAUTHN_SIGNUP: 'mfa_signup_webauthn'
-} as const)
+} as const);
 
-export const URLs: { [key: string]: string } = Object.freeze({
+export const URLs: Record<string, string> = Object.freeze({
     // Meta
     CONFIG: BASE_URL + '/config',
 
@@ -79,72 +78,72 @@ export const URLs: { [key: string]: string } = Object.freeze({
     LOGIN_WEBAUTHN: BASE_URL + '/auth/webauthn/login',
     SIGNUP_WEBAUTHN: BASE_URL + '/auth/webauthn/signup',
     WEBAUTHN_AUTHENTICATOR: BASE_URL + '/account/authenticators/webauthn'
-})
+});
 
 export const AuthenticatorType = Object.freeze({
     TOTP: 'totp',
     RECOVERY_CODES: 'recovery_codes',
     WEBAUTHN: 'webauthn'
-} as const)
+} as const);
 
-function postForm(action: string, data: { [key: string]: string }): void {
-    const f = document.createElement('form')
-    f.method = 'POST'
-    f.action = action
+function postForm(action: string, data: Record<string, string>): void {
+    const f = document.createElement('form');
+    f.method = 'POST';
+    f.action = action;
 
     for (const key in data) {
-        const d = document.createElement('input')
-        d.type = 'hidden'
-        d.name = key
-        d.value = data[key]
-        f.appendChild(d)
+        const d = document.createElement('input');
+        d.type = 'hidden';
+        d.name = key;
+        d.value = data[key];
+        f.appendChild(d);
     }
-    document.body.appendChild(f)
-    f.submit()
+    document.body.appendChild(f);
+    f.submit();
 }
 
-const tokenStorage: Storage = window.sessionStorage
+const tokenStorage: Storage = window.sessionStorage;
 
 export async function request(
     method: string,
     path: string,
     data?: any,
-    headers?: { [key: string]: string }
-): Promise<never> {
+    headers?: Record<string, string>
+): Promise<any> {
     const options: RequestInit = {
         method,
         headers: {
             ...ACCEPT_JSON,
             ...headers
-        }
-    }
-    options.credentials = 'include'
+        },
+        credentials: 'include'
+    };
+
     if (path !== URLs.CONFIG) {
         if (CLIENT === Client.BROWSER) {
-            options.headers['X-CSRFToken'] = getCSRFToken()
-
+            (options.headers as Record<string, string>)['X-CSRFToken'] = getCSRFToken() || '';
         } else if (CLIENT === Client.APP) {
-            options.headers['User-Agent'] = 'django-allauth example app'
-            const sessionToken = tokenStorage.getItem('sessionToken')
+            (options.headers as Record<string, string>)['User-Agent'] = 'django-allauth example app';
+            const sessionToken = tokenStorage.getItem('sessionToken');
             if (sessionToken) {
-                options.headers['X-Session-Token'] = sessionToken
+                (options.headers as Record<string, string>)['X-Session-Token'] = sessionToken;
             }
         }
     }
 
     if (typeof data !== 'undefined') {
-        options.body = JSON.stringify(data)
-        options.headers['Content-Type'] = 'application/json'
+        options.body = JSON.stringify(data);
+        (options.headers as Record<string, string>)['Content-Type'] = 'application/json';
     }
 
     const resp = await fetch(path, options);
 
-    // Check if response body exists and if content-type is JSON
+    // Check response body and content type before parsing
     const contentType = resp.headers.get("content-type");
     const hasBody = resp.headers.has("content-length") && parseInt(resp.headers.get("content-length") || "0") > 0;
 
     let msg = null;
-    if (hasBody && contentType && contentType.includes("application/json")) {
+    if (hasBody && contentType?.includes("application/json")) {
         try {
             msg = await resp.json();
         } catch (error) {
@@ -152,48 +151,48 @@ export async function request(
         }
     }
 
-    // Handle cases when msg is null or empty
+    // Handle session token updates
     if (msg?.status === 410) {
         tokenStorage.removeItem('sessionToken');
     }
     if (msg?.meta?.session_token) {
         tokenStorage.setItem('sessionToken', msg.meta.session_token);
     }
+
     if (msg && ([401, 410].includes(msg.status) || (msg.status === 200 && msg.meta?.is_authenticated) || msg.key)) {
         const event = new CustomEvent('allauth.auth.change', { detail: msg });
         document.dispatchEvent(event);
     }
 
-    return msg;  // Return msg even if it's null to avoid unexpected crashes
-
+    return msg;
 }
 
 // API Functions
-export async function login(data: Login): Promise<never> {
-    return await request('POST', URLs.LOGIN, data)
+export async function login(data: Login): Promise<any> {
+    return await request('POST', URLs.LOGIN, data);
 }
 
-export async function register(data: Register): Promise<never> {
-    return await request('POST', URLs.SIGNUP, data)
+export async function register(data: Register): Promise<any> {
+    return await request('POST', URLs.SIGNUP, data);
 }
 
-export async function logout(): Promise<never> {
-    return await request('DELETE', URLs.SESSION)
+export async function logout(): Promise<any> {
+    return await request('DELETE', URLs.SESSION);
 }
 
-export async function getConfig () {
-    return await request('GET', URLs.CONFIG)
+export async function getConfig(): Promise<any> {
+    return await request('GET', URLs.CONFIG);
 }
 
-export async function getAuth () {
-    return await request('GET', URLs.SESSION)
+export async function getAuth(): Promise<any> {
+    return await request('GET', URLs.SESSION);
 }
 
-export function redirectToProvider (providerId:string , callbackURL:string, process = AuthProcess.LOGIN) {
+export function redirectToProvider(providerId: string, callbackURL: string, process = AuthProcess.LOGIN): void {
     postForm(URLs.REDIRECT_TO_PROVIDER, {
         provider: providerId,
         process,
         callback_url: callbackURL,
-        csrfmiddlewaretoken: getCSRFToken()
-    })
+        csrfmiddlewaretoken: getCSRFToken() || ''
+    });
 }
