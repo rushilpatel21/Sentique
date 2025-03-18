@@ -15,6 +15,9 @@ import Layout from "@/Layout/Layout.tsx";
 
 // Page Components
 
+import { ChatDemo } from '@/pages/Chat';
+
+
 // Router Setup
 function createRouter(): ReturnType<typeof createBrowserRouter> {
 const routes: RouteObject[] = [
@@ -31,6 +34,7 @@ const routes: RouteObject[] = [
                 element: <Layout><Outlet/></Layout>,
                 children: [
                     {path: ROUTES.HOME, element: <AuthenticatedRoute><Home/></AuthenticatedRoute>},
+                    { path: ROUTES.CHAT, element: <AuthenticatedRoute><ChatDemo/></AuthenticatedRoute> }
                 ]
             }
         ]

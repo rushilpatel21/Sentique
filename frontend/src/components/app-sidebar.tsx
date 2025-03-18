@@ -26,6 +26,10 @@ import {
 
 import { useUser } from "@/auth/hooks"
 
+
+
+
+
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const user = useUser(); // Fetch user details from the backend
 
@@ -76,7 +80,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       },
       {
         title: "Chat with your Data",
-        url: "#",
+        url: "/chat",
         icon: Settings2,
       },
       {
