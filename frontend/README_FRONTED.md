@@ -32,13 +32,13 @@ frontend/
 Manages user authentication and authorization.
 
 - **`AuthContext.tsx`** – Provides authentication state using the **Context API**.
-- **`hooks.tsx`** – Contains custom hooks like `useAuth()` for authentication logic.
+- **`hooks.tsx`** – Contains custom hooks like `useAuth(), useUser()` for authentication logic.
 - **`index.tsx`** – Re-exports authentication-related modules.
 - **`routing.tsx`** – Handles protected routes (e.g., restricting access to logged-in users).
 
 ---
 
-## **📁 3. components/** _(Reusable UI Components)_
+## **📁 3. components/** _(Reusable UI Components) Shadcn_
 Contains reusable components for the frontend.
 
 ### **📂 ui/** _(User Interface Components)_
@@ -55,10 +55,11 @@ Contains reusable components for the frontend.
 ---
 
 ## **📁 4. hooks/** _(Custom React Hooks)_
-Contains reusable **logic-based functions**.
+Contains reusable **logic-based functions** Used by chat page.
 
 - Examples:
   - `useAuth()` – Handles authentication logic.
+  - `use-audio-recording()`
   - `useTheme()` – Manages Dark Mode toggle.
   - `useFetch()` – Custom hook for fetching API data.
 
@@ -68,16 +69,14 @@ Contains reusable **logic-based functions**.
 Defines reusable layout components such as headers, footers, and dashboards.
 
 - Example components:
-  - `DashboardLayout.tsx` – Main layout for the user dashboard.
-  - `Header.tsx` – Defines the app header.
-  - `Footer.tsx` – Defines the footer.
+  - Uses various components from the `ui/` folder to create a complete layout.
 
 ---
 
 ## **📁 6. lib/** _(Utility Functions & Helper Files)_
 Stores helper functions used across the application.
 
-- **`allAuth.tsx`** – Helper functions for authentication (e.g., handling JWT tokens).
+- **`allAuth.tsx`** – Helper functions for authentication. All API functions are mentioned here for auth.
 - **`audio-utils.ts`** – Functions for **audio processing** (e.g., voice commands, playing sound).
 - **`cerfToken.ts`** – Handles **security logic**, like CSRF tokens.
 - **`utils.ts`** – General **utility functions** (e.g., date formatting, API requests).
