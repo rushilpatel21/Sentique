@@ -1,6 +1,6 @@
 "use client";
 
-import { useChat } from "ai/react";
+import { useChat } from "@ai-sdk/react"
 import { Chat } from "@/components/ui/chat";
 
 export function ChatDemo() {
