@@ -1,9 +1,9 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import * as AvatarPrimitive from "@radix-ui/react-avatar"
+import * as React from "react";
+import * as AvatarPrimitive from "@radix-ui/react-avatar";
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils";
 
 function Avatar({
   className,
@@ -18,7 +18,7 @@ function Avatar({
       )}
       {...props}
     />
-  )
+  );
 }
 
 function AvatarImage({
@@ -31,23 +31,39 @@ function AvatarImage({
       className={cn("aspect-square size-full", className)}
       {...props}
     />
-  )
+  );
 }
 
 function AvatarFallback({
   className,
+  children,
   ...props
 }: React.ComponentProps<typeof AvatarPrimitive.Fallback>) {
   return (
     <AvatarPrimitive.Fallback
       data-slot="avatar-fallback"
       className={cn(
-        "bg-muted flex size-full items-center justify-center rounded-full",
+        "bg-muted flex size-full items-center justify-center rounded-full text-lg font-medium text-white",
         className
       )}
       {...props}
-    />
-  )
+    >
+      {children}
+    </AvatarPrimitive.Fallback>
+  );
 }
 
-export { Avatar, AvatarImage, AvatarFallback }
+function ProfileIcon({ name, imageUrl }: { name: string; imageUrl?: string }) {
+  const initial = name ? name.charAt(0).toUpperCase() : "?"; // Get first letter, fallback to "?"
+  
+  return (
+    <Avatar>
+      {/* Profile Image (if available) */}
+      <AvatarImage src={imageUrl} alt={name} />
+      {/* Fallback: Display First Letter of Name */}
+      <AvatarFallback>{initial}</AvatarFallback>
+    </Avatar>
+  );
+}
+
+export { Avatar, AvatarImage, AvatarFallback, ProfileIcon };
