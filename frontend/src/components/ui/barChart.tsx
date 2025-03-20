@@ -1,6 +1,4 @@
-import { TrendingUp } from "lucide-react";
-import { Bar, BarChart, XAxis, YAxis, LabelList } from "recharts"; // Import LabelList
-
+import { Bar, BarChart, XAxis, YAxis, LabelList } from "recharts";
 import {
     Card,
     CardContent,
@@ -16,89 +14,79 @@ import {
     ChartTooltipContent,
 } from "@/components/ui/chart";
 
-// Chart data and config setup
-const chartData = [
-    { browser: "chrome", visitors: 275, fill: "var(--color-chrome)" },
-    { browser: "safari", visitors: 200, fill: "var(--color-safari)" },
-    { browser: "firefox", visitors: 187, fill: "var(--color-firefox)" },
-    { browser: "edge", visitors: 173, fill: "var(--color-edge)" },
-    { browser: "other", visitors: 90, fill: "var(--color-other)" },
-];
+// Define prop types for reusability
+interface BarChartProps {
+    title: string;
+    description: string;
+    data: {
+        browser?: string;
+        reason?: string;
+        visitors?: number;
+        count?: number;
+        fill?: string;
+        color?: string;
+    }[];
+    config?: ChartConfig;
+}
 
-const chartConfig = {
-    visitors: {
-        label: "Visitors",
-    },
-    chrome: {
-        label: "Playstore",
-        color: "hsl(var(--chart-1))",
-    },
-    safari: {
-        label: "Reddit",
-        color: "hsl(var(--chart-2))",
-    },
-    firefox: {
-        label: "X",
-        color: "hsl(var(--chart-3))",
-    },
-    edge: {
-        label: "AppStore",
-        color: "hsl(var(--chart-4))",
-    },
-    other: {
-        label: "Trust Pilot",
-        color: "hsl(var(--chart-5))",
-    },
-} satisfies ChartConfig;
-
-// Bar Chart Component
-const BarChartComponent = () => {
+const BarChartComponent: React.FC<BarChartProps> = ({ title, description, data, config = {} }) => {
     return (
-        <Card className="max-w-[400px]-h-[100px]">
+        <Card className="max-w-[400px]-h-[200px]">
             <CardHeader>
-                <CardTitle>Sources of Feedback</CardTitle>
-                <CardDescription>January - June 2024</CardDescription>
+                <CardTitle>{title}</CardTitle>
+                <CardDescription>{description}</CardDescription>
             </CardHeader>
-            <CardContent className ="w-full h-full">
-                <ChartContainer config={chartConfig} className="w-full h-full">
+            <CardContent className="w-full h-full">
+                <ChartContainer config={config} className="w-full h-full">
                     <BarChart
-                         width={450} // Increased width
-                         height={250} // Increased height
+                        width={450}
+                        height={250}
                         accessibilityLayer
-                        data={chartData}
+                        data={data}
                         layout="vertical"
-                        margin={{
-                            top: 5,
-                            right: 5,
-                            left: 10,
-                            bottom: 5,
-                        }}
+                        margin={{ top: 5, right: 5, left: 30, bottom: 5 }} // More space for Y-axis labels
                     >
                         <YAxis
-                            dataKey="browser"
+                            dataKey={(entry) => entry.browser || entry.reason} // Supports both `browser` and `reason`
                             type="category"
                             tickLine={false}
                             tickMargin={10}
                             axisLine={false}
                             tickFormatter={(value) =>
-                                chartConfig[value as keyof typeof chartConfig]?.label
+                                String(config?.[value as keyof typeof config]?.label || value)
                             }
+                            fontSize={15}
+                            tick={{
+                                style: {
+                                    whiteSpace: "nowrap", // Keeps label on one line
+                                    overflow: "hidden", // Hides overflowing text
+                                    textOverflow: "ellipsis", // Adds '...' if label is too long
+                                    maxWidth: "100%", // Ensures no wrapping
+                                },
+                            }}
+                            width={80} // Adjusts width for the Y-axis label container
+                           
                         />
-                        <XAxis dataKey="visitors" type="number" hide />
-                        <ChartTooltip
-                            cursor={false}
-                            content={<ChartTooltipContent hideLabel />}
-                        />
-                        <Bar dataKey="visitors" layout="vertical" radius={5}>
-                            {/* Position label inside the bar for better visibility */}
-                            <LabelList dataKey="visitors" position="insideRight" fill="white" fontSize={12} />
-                        </Bar>
 
+                        <XAxis
+                            dataKey={(entry) => entry.visitors || entry.count}
+                            type="number"
+                            hide
+                        />
+                        <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
+                        <Bar dataKey={(entry) => entry.visitors || entry.count} layout="vertical" radius={5}>
+                            <LabelList
+                                dataKey={(entry) => entry.visitors || entry.count}
+                                position="insideRight"
+                                fill="white"
+                                fontSize={15}
+                            />
+                        </Bar>
                     </BarChart>
                 </ChartContainer>
             </CardContent>
             <CardFooter className="flex flex-col items-center gap-2 text-sm">
-                <div className="leading-none text-muted-foreground text-center" >
+                <div className="leading-none text-muted-foreground text-center">
                     Count of Feedback Records
                 </div>
             </CardFooter>
@@ -106,5 +94,4 @@ const BarChartComponent = () => {
     );
 };
 
-// Export the BarChartComponent as default
 export default BarChartComponent;

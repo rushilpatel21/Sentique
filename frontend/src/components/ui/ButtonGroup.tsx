@@ -44,30 +44,36 @@ const ButtonGroup: React.FC<ButtonGroupProps> = ({ defaultSelected, onSelectionC
   ];
 
   return (
-    <div className="flex gap-2 p-2 bg-gray-100 rounded-lg shadow-md relative">
+    <div className="flex gap-2 p-2 bg-background rounded-lg shadow-md relative">
+
       {/* Calendar Icon */}
-      <span className="flex items-center">
+      <span className="flex items-center text-gray-700 dark:text-white">
         <Calendar1Icon />
       </span>
-
+  
       {/* Map through the options and render buttons */}
       {options.map((option) => (
         <button
-          key={option.value} // Key to uniquely identify each button
-          ref={option.value === "CUSTOM" ? customButtonRef : null} // Reference to the custom button if needed
+          key={option.value}
+          ref={option.value === "CUSTOM" ? customButtonRef : null}
           className={`px-4 py-2 text-sm font-medium uppercase rounded-md transition duration-300 
-            ${selected === option.value ? "bg-blue-500 text-white border-blue-500" : "bg-white text-gray-700 border-transparent hover:bg-gray-200"} 
+            ${
+              selected === option.value
+                ? "bg-blue-500 text-white border-blue-500"
+                : "bg-white text-gray-700 dark:bg-gray-700 dark:text-white border-transparent hover:bg-gray-200 dark:hover:bg-gray-600"
+            } 
             border border-solid focus:outline-none`}
-          onClick={() => handleButtonClick(option.value)} // Handle button click
+          onClick={() => handleButtonClick(option.value)}
         >
-          {option.label} {/* Display button label */}
+          {option.label}
         </button>
       ))}
-
+  
       {/* Conditionally render DatePickerDemo component when "CUSTOM" is selected */}
       {isCustomSelected && <DatePickerDemo />}
     </div>
   );
+  
 };
 
 export default ButtonGroup;
