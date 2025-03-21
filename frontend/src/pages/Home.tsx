@@ -76,7 +76,7 @@ export function Home() {
       </div>
 
 
-      <div className="mt-6 grid grid-cols-3 gap-3">
+      <div className="mt-6 grid grid-cols-3 gap-2">
         <CustomBarChartComponent
           title="Top Complaints"
           description="January - June 2024"

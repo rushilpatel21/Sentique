@@ -39,8 +39,8 @@ const BarChartComponent: React.FC<BarChartProps> = ({ title, description, data, 
             <CardContent className="w-full h-full">
                 <ChartContainer config={config} className="w-full h-full">
                     <BarChart
-                        width={450}
-                        height={250}
+                        width={600} 
+                        height={400}
                         accessibilityLayer
                         data={data}
                         layout="vertical"
