@@ -25,11 +25,38 @@ interface BarChartProps {
         count?: number;
         fill?: string;
         color?: string;
+        month?: string;
     }[];
     config?: ChartConfig;
 }
 
 const BarChartComponent: React.FC<BarChartProps> = ({ title, description, data, config = {} }) => {
+    // Custom tick renderer for Y-axis that ensures left alignment
+    const CustomYAxisTick = ({ y, payload, textColor = "#71717a" }: any) => {
+        const label = config?.[payload.value as keyof typeof config]?.label || payload.value;
+        
+        return (
+            <g transform={`translate(0,${y})`}>
+                <text
+                    x={10}
+                    y={0}
+                    dy={4}
+                    textAnchor="start"
+                    fontSize={15}
+                    fill={textColor}
+                    style={{
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        maxWidth: "140px" // Limit text width
+                    }}
+                >
+                    {label}
+                </text>
+            </g>
+        );
+    };
+
     return (
         <Card className="max-w-[400px]-h-[200px]">
             <CardHeader>
@@ -44,28 +71,15 @@ const BarChartComponent: React.FC<BarChartProps> = ({ title, description, data, 
                         accessibilityLayer
                         data={data}
                         layout="vertical"
-                        margin={{ top: 5, right: 5, left: 30, bottom: 5 }} // More space for Y-axis labels
+                        margin={{ top: 5, right: 5, left: 20, bottom: 5 }} // Increased left margin for labels
                     >
                         <YAxis
-                            dataKey={(entry) => entry.browser || entry.reason} // Supports both `browser` and `reason`
+                            dataKey={(entry) => entry.browser || entry.reason || entry.month} // Supports browser, reason, and month
                             type="category"
                             tickLine={false}
-                            tickMargin={10}
                             axisLine={false}
-                            tickFormatter={(value) =>
-                                String(config?.[value as keyof typeof config]?.label || value)
-                            }
-                            fontSize={15}
-                            tick={{
-                                style: {
-                                    whiteSpace: "nowrap", // Keeps label on one line
-                                    overflow: "hidden", // Hides overflowing text
-                                    textOverflow: "ellipsis", // Adds '...' if label is too long
-                                    maxWidth: "100%", // Ensures no wrapping
-                                },
-                            }}
-                            width={80} // Adjusts width for the Y-axis label container
-                           
+                            tick={<CustomYAxisTick />} // Use custom tick renderer
+                            width={70} // Increased width for the Y-axis label container
                         />
 
                         <XAxis

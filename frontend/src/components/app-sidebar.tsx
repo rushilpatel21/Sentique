@@ -75,7 +75,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       },
       {
         title: "Trend Analysis",
-        url: "#",
+        url: "/trend",
         icon: BookOpen,
       },
       {

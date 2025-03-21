@@ -16,7 +16,7 @@ import Layout from "@/Layout/Layout.tsx";
 // Page Components
 
 import { ChatDemo } from '@/pages/Chat';
-
+import TrendAnalysis from '@/pages/TrendAnalysis';
 
 // Router Setup
 function createRouter(): ReturnType<typeof createBrowserRouter> {
@@ -34,7 +34,8 @@ const routes: RouteObject[] = [
                 element: <Layout><Outlet/></Layout>,
                 children: [
                     {path: ROUTES.HOME, element: <AuthenticatedRoute><Home/></AuthenticatedRoute>},
-                    { path: ROUTES.CHAT, element: <AuthenticatedRoute><ChatDemo/></AuthenticatedRoute> }
+                    {path: ROUTES.CHAT, element: <AuthenticatedRoute><ChatDemo/></AuthenticatedRoute> },
+                    {path: ROUTES.TREND, element: <AuthenticatedRoute><TrendAnalysis/></AuthenticatedRoute> }
                 ]
             }
         ]

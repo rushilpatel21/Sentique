@@ -3,6 +3,7 @@ const ROUTES = {
     LOGIN: "/login",
     REGISTER: "/register",
     CHAT: "/chat",  
+    TREND: "/trend",
 };
 
 export default ROUTES;
