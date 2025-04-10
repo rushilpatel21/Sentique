@@ -48,7 +48,12 @@
    python manage.py migrate
    ```
 
-4. Run the development server:
+4. Run the celery worker:
+   ```sh
+   celery -A backend worker --loglevel=info
+   ```
+
+5. Run the development server:
    ```sh
    python manage.py runserver
    ```
