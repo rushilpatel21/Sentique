@@ -92,14 +92,14 @@ Sentique transforms scattered customer feedback into actionable intelligence thr
 5. **Presentation**: Frontend displays visualizations and interactive reports
 6. **Interaction**: Users explore data and query the RAG chatbot
 
-## 💻 Technical Stack
+## Technical Stack
 
 - **Backend**: Django, Celery, PostgreSQL
 - **Frontend**: React, TypeScript, Recharts
 - **ML/AI**: Fine-tuned BERT, SentenceTransformer, Gemini API
 - **Infrastructure**: Redis (Celery broker), Vector database capabilities
 
-## 🚀 Project Setup Guide
+## Project Setup Guide
 
 ### Notes
 - Requires **pnpm**, **Node.js**, **Python 3.9+**
