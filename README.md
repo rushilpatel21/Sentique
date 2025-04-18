@@ -74,12 +74,15 @@ Sentique transforms scattered customer feedback into actionable intelligence thr
 *The main dashboard provides a comprehensive view of sentiment trends across time periods, sources, and categories. Key metrics are highlighted with interactive filtering capabilities.*
 
 ### Sentiment Analysis
-![Sentiment Analysis](sentique_screenshots/Sentique-Screenshots/Analysis_1.png)
+![Sentiment Analysis](sentique_screenshots/Sentique-Screenshots/Sentiment_1.png)
 *Detailed sentiment breakdown showing positive, negative, and neutral distribution across different sources and time periods, enabling targeted analysis of customer feedback patterns.*
 
-### Category Distribution
+### Actionable Insights
+![Category Distribution](sentique_screenshots/Sentique-Screenshots/Analysis_1.png)
+*Summarization of review distribution across the 16 categories identified by our fine-tuned BERT model, helping identify the most discussed aspects of products or services.*
+
 ![Category Distribution](sentique_screenshots/Sentique-Screenshots/Analysis_2.png)
-*Visualization of review distribution across the 16 categories identified by our fine-tuned BERT model, helping identify the most discussed aspects of products or services.*
+*Actionable Insights of review distribution across the 16 categories identified by our fine-tuned BERT model, helping identify the most discussed aspects of products or services.*
 
 ### RAG-Based Chatbot Interface
 ![RAG Chatbot](sentique_screenshots/Sentique-Screenshots/RAG_1.png)
@@ -87,7 +90,7 @@ Sentique transforms scattered customer feedback into actionable intelligence thr
 
 ### Insights Report
 ![Insights Report](sentique_screenshots/Sentique-Screenshots/Report_1.png)
-*AI-generated summary report highlighting key strengths and improvement areas based on analysis of customer reviews across selected time periods and categories.*
+*Summary report highlighting key strengths and improvement areas based on analysis of customer reviews across selected time periods and categories.*
 
 ## 💻 Technical Stack
 
@@ -101,7 +104,7 @@ Sentique transforms scattered customer feedback into actionable intelligence thr
 ### Notes
 - Requires **pnpm**, **Node.js**, **Python 3.9+**
 - On Windows, use `venv\Scripts\activate` instead of `source venv/bin/activate`
-- Environment variables must be configured in `.env` file (see `.env.example`)
+- Environment variables must be configured in `.env` file
 
 ### Frontend
 
