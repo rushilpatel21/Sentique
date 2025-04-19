@@ -8,6 +8,16 @@ Sentique transforms scattered customer feedback into actionable intelligence thr
 
 ## Screenshots
 
+### Onboarding Form  
+![Onboarding Form](sentique_screenshots/Sentique-Screenshots/Onboarding.png)  
+*The onboarding form collects essential application details via the `/register` endpoint to set up Sentique:*  
+- Apple App Store Product ID (numeric ID, e.g. `123456789`)  
+- Apple App Store Product Name (e.g. `MyAwesomeApp`)  
+- Google Play Store Package Name (e.g. `com.example.app`)  
+- Company Website URL (e.g. `https://example.com`)  
+
+*Once you submit this information, Sentique will automatically fetch and process reviews from your configured app stores and web channels for sentiment analysis and insights.*
+
 ### Dashboard Overview
 ![Dashboard Overview](sentique_screenshots/Sentique-Screenshots/Dashboard_1.png)
 *The main dashboard provides a comprehensive view of sentiment trends across time periods, sources, and categories. Key metrics are highlighted with interactive filtering capabilities.*
