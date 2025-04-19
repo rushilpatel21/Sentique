@@ -28,7 +28,7 @@ export default function Layout({ children }: LayoutProps): JSX.Element {
           <div className="flex items-center gap-2 px-4">
             <SidebarTrigger />
             <Avatar>
-              <AvatarFallback>M</AvatarFallback>
+              <AvatarFallback>R</AvatarFallback>
             </Avatar>
             <Separator orientation="vertical" className="mr-2 h-4" />
             <Breadcrumb>
