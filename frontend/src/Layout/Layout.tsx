@@ -15,11 +15,16 @@ import {
 } from "@/components/ui/sidebar";
 import { JSX } from "react";
 import { ModeToggle } from "@/components/mode-toggle.tsx";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar.tsx";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar.tsx";
 import { LayoutProps } from "@/types/Types.ts";
-import { ScrollArea } from "@/components/ui/scroll-area"; // Import ScrollArea
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { getInitials } from "@/components/nav-user"; // Import getInitials function
+import { useUser } from "@/auth"; // Import useUser hook
 
 export default function Layout({ children }: LayoutProps): JSX.Element {
+  const user = useUser(); // Get current user
+  const userInitials = getInitials(user?.name || user?.username || ""); // Get initials, with fallbacks
+  
   return (
     <SidebarProvider>
       <AppSidebar />
@@ -28,7 +33,8 @@ export default function Layout({ children }: LayoutProps): JSX.Element {
           <div className="flex items-center gap-2 px-4">
             <SidebarTrigger />
             <Avatar>
-              <AvatarFallback>R</AvatarFallback>
+              <AvatarImage src={user?.avatar} alt={user?.name} />
+              <AvatarFallback>{userInitials}</AvatarFallback>
             </Avatar>
             <Separator orientation="vertical" className="mr-2 h-4" />
             <Breadcrumb>
