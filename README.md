@@ -14,7 +14,7 @@ Sentique transforms scattered customer feedback into actionable intelligence thr
 - Apple App Store Product ID (numeric ID, e.g. `123456789`)  
 - Apple App Store Product Name (e.g. `MyAwesomeApp`)  
 - Google Play Store Package Name (e.g. `com.example.app`)  
-- Company Website URL (e.g. `https://example.com`)  
+- Company Website URL (e.g. `example.com`)  
 
 *Once you submit this information, Sentique will automatically fetch and process reviews from your configured app stores and web channels for sentiment analysis and insights.*
 
