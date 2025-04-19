@@ -9,7 +9,7 @@ Sentique transforms scattered customer feedback into actionable intelligence thr
 ## Screenshots
 
 ### Onboarding Form  
-![Onboarding Form](sentique_screenshots/Sentique-Screenshots/Onboarding.png)  
+<!-- ![Onboarding Form](sentique_screenshots/Sentique-Screenshots/Onboarding.png)   -->
 *The onboarding form collects essential application details via the `/register` endpoint to set up Sentique:*  
 - Apple App Store Product ID (numeric ID, e.g. `123456789`)  
 - Apple App Store Product Name (e.g. `MyAwesomeApp`)  
