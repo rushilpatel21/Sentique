@@ -20,7 +20,7 @@ logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s'
 )
-logger = logging.getLogger(_name_)
+logger = logging.getLogger(__name__)
 
 # Initialize FastAPI app
 app = FastAPI()
@@ -53,15 +53,15 @@ reverse_label_map = {v: k for k, v in label_map.items()}
 
 # Custom Dataset class
 class TextDataset(Dataset):
-    def _init_(self, texts, tokenizer, max_length=384):
+    def __init__(self, texts, tokenizer, max_length=384):
         self.texts = texts
         self.tokenizer = tokenizer
         self.max_length = max_length
 
-    def _len_(self):
+    def __len__(self):
         return len(self.texts)
 
-    def _getitem_(self, idx):
+    def __getitem__(self, idx):
         text = self.texts[idx]
         encoding = self.tokenizer(
             text,
@@ -190,7 +190,7 @@ def start_server():
     ngrok_thread = threading.Thread(target=start_ngrok)
     ngrok_thread.start()
     # Bind to localhost so ngrok can reach it
-    uvicorn.run(app, host="127.0.0.1", port=8000)
+    uvicorn.run(app, host="127.0.0.1", port=8000, log_level="info")
 
-if _name_ == "_main_":
+if __name__ == "__main__":
     start_server()

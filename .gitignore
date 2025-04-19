@@ -53,3 +53,4 @@ backend/backend/__pycache__/__init__.cpython-312.pyc
 __pycache__/
 backend/backend/__pycache__/
 backend/.env
+username_password.txt
