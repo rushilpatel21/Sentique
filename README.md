@@ -6,7 +6,7 @@
 
 Sentique transforms scattered customer feedback into actionable intelligence through sophisticated data processing and AI-powered analysis. The platform combines traditional machine learning with generative AI to deliver both structured analytics and conversational insights, helping businesses understand customer sentiment at scale.
 
-## Screenshots
+<!-- ## Screenshots
 
 ### Dashboard Overview
 ![Dashboard Overview](sentique_screenshots/Sentique-Screenshots/Dashboard_1.png)
@@ -29,7 +29,7 @@ Sentique transforms scattered customer feedback into actionable intelligence thr
 
 ### Insights Report
 ![Insights Report](sentique_screenshots/Sentique-Screenshots/Report_1.png)
-*Summary report highlighting key strengths and improvement areas based on analysis of customer reviews across selected time periods and categories.*
+*Summary report highlighting key strengths and improvement areas based on analysis of customer reviews across selected time periods and categories.* -->
 
 ## Key Features
 
