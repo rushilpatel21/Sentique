@@ -40,6 +40,17 @@ Sentique transforms scattered customer feedback into actionable intelligence thr
 - **AI-Powered Insights**: Actionable summaries of what users like and areas for improvement via Gemini API
 - **RAG-Driven Chatbot**: Natural language Q&A over vectorized review data using SentenceTransformer + Gemini
 
+## Tech Stack
+- **Frontend**: React, Vite, TypeScript, Tailwind CSS
+- **Backend**: Django, Django REST Framework, FastAPI
+- **Database**: PostgreSQL, PGVector, Redis (Celery broker)
+- **Authentication**: Django all-auth
+- **LLM**: Gemini 1.5 Pro
+- **Deep Learning Models**: Fine-tuned ROBERTA based classifier model, j-hartmann/sentiment-roberta-large-english-3-classes
+- **Network Tunneling**: ngrok
+- **Process Management**: Celery
+- **Package Management**: pnpm (for frontend), pip (for backend)
+
 ## System Architecture
 
 ### Backend Architecture
@@ -91,17 +102,6 @@ Sentique transforms scattered customer feedback into actionable intelligence thr
 4. **Analysis**: Gemini API generates insights from processed data
 5. **Presentation**: Frontend displays visualizations and interactive reports
 6. **Interaction**: Users explore data and query the RAG chatbot
-
-## Tech Stack
-- **Frontend**: React, Vite, TypeScript, Tailwind CSS
-- **Backend**: Django, Django REST Framework, FastAPI
-- **Database**: PostgreSQL, PGVector, Redis (Celery broker)
-- **Authentication**: Django all-auth
-- **LLM**: Gemini 1.5 Pro
-- **Deep Learning Models**: Fine-tuned ROBERTA based classifier model, j-hartmann/sentiment-roberta-large-english-3-classes
-- **Network Tunneling**: ngrok
-- **Process Management**: Celery
-- **Package Management**: pnpm (for frontend), pip (for backend)
 
 ## Project Setup Guide
 
