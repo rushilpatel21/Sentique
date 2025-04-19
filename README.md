@@ -8,7 +8,7 @@ Sentique transforms scattered customer feedback into actionable intelligence thr
 
 ## Screenshots
 
-### Onboarding Form  
+<!-- ### Onboarding Form  
 ![Onboarding Form](sentique_screenshots/Sentique-Screenshots/Onboarding.png)  
 *The onboarding form collects essential application details via the `/register` endpoint to set up Sentique:*  
 - Apple App Store Product ID (numeric ID, e.g. `123456789`)  
@@ -24,7 +24,7 @@ Sentique transforms scattered customer feedback into actionable intelligence thr
 
 ### Sentiment Analysis
 ![Sentiment Analysis](sentique_screenshots/Sentique-Screenshots/Sentiment_1.png)
-*Detailed sentiment breakdown showing positive, negative, and neutral distribution across different sources and time periods, enabling targeted analysis of customer feedback patterns.*
+*Detailed sentiment breakdown showing positive, negative, and neutral distribution across different sources and time periods, enabling targeted analysis of customer feedback patterns.* -->
 
 ### Actionable Insights
 ![Category Distribution](sentique_screenshots/Sentique-Screenshots/Analysis_1.png)
