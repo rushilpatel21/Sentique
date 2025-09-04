@@ -19,7 +19,7 @@ import datetime
 from django.utils.timezone import now
 
 # Load environment variables
-GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY_VIEW")
+GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
 client = genai.Client(api_key=GEMINI_API_KEY)  
 
 

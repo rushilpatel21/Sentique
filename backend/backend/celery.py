@@ -1,5 +1,9 @@
 from celery import Celery
 import os
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backend.settings')
 
