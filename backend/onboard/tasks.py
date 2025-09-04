@@ -10,7 +10,8 @@ from typing import List, Tuple
 import praw
 import requests
 import json
-from datetime import datetime
+from datetime import datetime, timezone
+from django.utils.timezone import now
 from fake_useragent import UserAgent
 from time import sleep
 import logging
@@ -125,7 +126,7 @@ def scrape_source_1(user_data,user_id, country="us", total_reviews=2000, batch_s
                     Review.objects.create(
                         user_data=user_data,
                         review_id=str(review.get('reviewId', f"appstore_{reviews_collected}")),
-                        date=review.get('date', datetime.now()),
+                        date=review.get('date', now()),
                         rating=review.get('rating', 0),
                         source="appstore",
                         review=review.get('review', ''),
@@ -247,7 +248,7 @@ def scrape_source_2(user_data, user_id,country="us", total_reviews=2000, batch_s
                     Review.objects.create(
                         user_data=user_data,
                         review_id=review.get('reviewId', f"googleplay_{reviews_collected}"),
-                        date=review.get('at', datetime.now().isoformat()),
+                        date=review.get('at', now().isoformat()),
                         rating=review.get('score', 0),
                         source="googleplay",
                         review=review.get('content', ''),
@@ -290,7 +291,7 @@ def scrape_source_3(user_data, user_id, subreddit="uber", total_reviews=2000, ba
         try:
             post_data = {
                 "review_id": submission.id,
-                "date": datetime.fromtimestamp(submission.created_utc),
+                "date": datetime.fromtimestamp(submission.created_utc, tz=timezone.utc),
                 "rating": float(submission.score),
                 "source": "reddit",
                 "review": submission.selftext,
@@ -339,7 +340,7 @@ def get_reviews_data(html: str) -> list[dict]:
 def iso_to_datetime(iso_str: str) -> datetime:
     if iso_str:
         return datetime.fromisoformat(iso_str.replace("Z", "+00:00"))
-    return datetime.now()
+    return now()
 
 def parse_review(review: dict) -> dict:
     dates = review.get("dates", {})

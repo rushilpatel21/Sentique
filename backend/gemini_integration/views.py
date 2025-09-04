@@ -114,17 +114,33 @@ class ChatAPIView(APIView):
             ]
 
             # 6. Call Gemini to generate a response and stream it back.
-            response = client.models.generate_content_stream(
-                model="gemini-1.5-pro",
-                contents=final_prompt,
-            )
+            try:
+                response = client.models.generate_content_stream(
+                    model="gemini-1.5-pro",
+                    contents=final_prompt,
+                )
 
-            def stream_to_client():
-                for chunk in response:
-                    text = chunk.text
-                    yield f'0:{json.dumps(text)}\n'
+                def stream_to_client():
+                    try:
+                        for chunk in response:
+                            text = chunk.text
+                            yield f'0:{json.dumps(text)}\n'
+                    except Exception as e:
+                        if "429" in str(e) or "Too Many Requests" in str(e):
+                            yield f'0:{json.dumps("Rate limit exceeded. Please try again in a few moments.")}\n'
+                        else:
+                            yield f'0:{json.dumps(f"Error generating response: {str(e)}")}\n'
 
-            return StreamingHttpResponse(stream_to_client(), content_type="text/event-stream")
+                return StreamingHttpResponse(stream_to_client(), content_type="text/event-stream")
+            
+            except Exception as e:
+                if "429" in str(e) or "Too Many Requests" in str(e):
+                    return Response(
+                        {"error": "Rate limit exceeded. Please try again in a few moments."},
+                        status=status.HTTP_429_TOO_MANY_REQUESTS
+                    )
+                else:
+                    raise e
 
         except Exception as e:
             return Response(
