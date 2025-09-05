@@ -100,57 +100,10 @@ def step_1(user_data, user_id):
                 logger.error(f"Failed Sub-step {substep_num} of Step 1: {str(e)}")
                 raise e
 
-# Sub-step 1: App Store Scraper
-def scrape_source_1(user_data,user_id, country="us", total_reviews=2000, batch_size=1000):
-    try:
-        profile = UserProfile.objects.get(id=user_id)
-        app_id = profile.apple_app_store_id
-        app_name = profile.apple_app_store_name
-        if not app_id or not app_name:
-            raise ValueError("Apple App Store ID or name missing")
-    except UserProfile.DoesNotExist:
-        raise ValueError("User profile not found")
-
-    logger.info(f"Starting App Store scraping for {app_name} (ID: {app_id})")
-    app = AppStore(country=country, app_name=app_name, app_id=app_id)
-    reviews_collected = user_data.reviews.filter(source="appstore").count()
-
-    while reviews_collected < total_reviews:
-        remaining = total_reviews - reviews_collected
-        fetch_count = min(batch_size, remaining)
-
-        try:
-            app.review(how_many=fetch_count)
-            for review in app.reviews:
-                try:
-                    Review.objects.create(
-                        user_data=user_data,
-                        review_id=str(review.get('reviewId', f"appstore_{reviews_collected}")),
-                        date=review.get('date', now()),
-                        rating=review.get('rating', 0),
-                        source="appstore",
-                        review=review.get('review', ''),
-                        title=review.get('title', ''),
-                        username=review.get('userName', ''),
-                        url=f"https://apps.apple.com/{country}/app/{app_name}/id{app_id}",
-                        comments=[],
-                        language=country,
-                    )
-                except IntegrityError as e:
-                    # Log the error or print it for debugging
-                    print(f"Skipping review due to IntegrityError: {e}")
-                    continue
-                reviews_collected += 1
-
-            logger.info(f"Collected {reviews_collected}/{total_reviews} App Store reviews")
-            app.reviews = []
-            sleep(1)  # Avoid rate limiting
-
-        except Exception as e:
-            logger.error(f"Error scraping App Store: {str(e)}")
-            raise e
-
-    logger.info(f"App Store scraping completed. Total reviews: {reviews_collected}")
+# Sub-step 1: App Store Scraper (SKIPPED)
+def scrape_source_1(user_data, user_id, country="us", total_reviews=2000, batch_size=1000):
+    logger.info("Skipping App Store scraping due to API issues")
+    return
 
 # Sub-step 2: Google Play Scraper
 MAX_COUNT_EACH_FETCH = 199
@@ -492,7 +445,7 @@ def scrape_source_5(user_data,user_id, total_reviews=1000, batch_size=1000):
 
 def step_2(user_data, user_id):
     logger.info(f"Step 2 Started for all reviews")
-    api_url = "https://3efb-34-32-158-123.ngrok-free.app/analyze_csv"
+    api_url = os.getenv('SENTIMENT_API_URL', 'https://3efb-34-32-158-123.ngrok-free.app/analyze_csv')
 
     # Get total count first
     total_unprocessed = Review.objects.filter(sentiment__isnull=True).count()
@@ -585,7 +538,7 @@ def step_2(user_data, user_id):
                 logger.warning(f"Unexpected content type: {response.headers.get('content-type')}")
 
         except Exception as e:
-            logger.error(f"Error processing batch: {str(e)}", exc_error=True)
+            logger.error(f"Error processing batch: {str(e)}", exc_info=True)
         finally:
             # Clean up
             if os.path.exists(temp_filename):
