@@ -47,7 +47,7 @@ For example:
 
     try:
         # Initialize the model
-        model = genai.GenerativeModel(model_name="gemini-1.5-pro")
+        model = genai.GenerativeModel(model_name="gemini-2.5-flash")
         
         # Generate the response
         response = model.generate_content(prompt)

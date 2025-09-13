@@ -236,7 +236,7 @@ Based *only* on the provided review texts, generate the following analysis:
 """
 
     # Initialize the model (using 1.5 Pro as it's generally better for nuanced tasks)
-    model = genai.GenerativeModel(model_name="gemini-1.5-pro")
+    model = genai.GenerativeModel(model_name="gemini-2.5-flash")
 
     # Configure safety settings
     safety_settings = [
