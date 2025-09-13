@@ -252,7 +252,6 @@ Based *only* on the provided review texts, generate the following analysis:
         "top_p": 1.0,
         "top_k": 32,
         "max_output_tokens": 8192,  # Adjust based on expected output length
-        "response_mime_type": "application/json",  # Explicitly request JSON output
     }
 
     print("Sending request to Gemini API...")
@@ -266,7 +265,14 @@ Based *only* on the provided review texts, generate the following analysis:
     # Robust Parsing
     try:
         print("Received response from Gemini. Parsing JSON...")
-        result = json.loads(response.text)
+        # Properly access the response content
+        if hasattr(response, 'text'):
+            response_text = response.text
+        else:
+            # For newer API versions, use the parts accessor
+            response_text = response.candidates[0].content.parts[0].text
+        
+        result = json.loads(response_text)
 
         # Validate the structure
         if not all(k in result for k in ["summary", "positiveInsights", "negativeInsights"]):
@@ -284,15 +290,31 @@ Based *only* on the provided review texts, generate the following analysis:
     except json.JSONDecodeError as e:
         print(f"Error: Failed to decode JSON from Gemini response: {e}")
         print("Gemini Raw Response Text:")
-        print(response.text[:1000] + "..." if len(response.text) > 1000 else response.text)
-        # Attempt basic extraction as a last resort (less reliable)
-        return _extract_from_text_fallback(response.text, category, date_range)
+        # Properly access the response content for error logging
+        try:
+            if hasattr(response, 'text'):
+                error_text = response.text
+            else:
+                error_text = response.candidates[0].content.parts[0].text
+            print(error_text[:1000] + "..." if len(error_text) > 1000 else error_text)
+            return _extract_from_text_fallback(error_text, category, date_range)
+        except:
+            print("Could not access response text for error logging")
+            return _extract_from_text_fallback("", category, date_range)
     except ValueError as e:
          print(f"Error: Invalid JSON structure received from Gemini: {e}")
          print("Gemini Raw Response Text:")
-         print(response.text[:1000] + "..." if len(response.text) > 1000 else response.text)
-         # Attempt basic extraction as a last resort
-         return _extract_from_text_fallback(response.text, category, date_range)
+         # Properly access the response content for error logging
+         try:
+             if hasattr(response, 'text'):
+                 error_text = response.text
+             else:
+                 error_text = response.candidates[0].content.parts[0].text
+             print(error_text[:1000] + "..." if len(error_text) > 1000 else error_text)
+             return _extract_from_text_fallback(error_text, category, date_range)
+         except:
+             print("Could not access response text for error logging")
+             return _extract_from_text_fallback("", category, date_range)
     except Exception as e:
         # Catch other potential errors from the API call or processing
         print(f"An unexpected error occurred during Gemini processing: {str(e)}")
