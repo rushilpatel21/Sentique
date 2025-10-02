@@ -3,6 +3,7 @@ from django.db.models.functions import ExtractYear, ExtractMonth, TruncMonth
 from rest_framework import generics
 from django.db.models import Count, Q, FloatField, ExpressionWrapper, F
 from datetime import datetime, timedelta
+from django.utils import timezone
 from rest_framework.pagination import LimitOffsetPagination, PageNumberPagination
 from reviews.models import Review
 from rest_framework.permissions import IsAuthenticated
@@ -527,13 +528,19 @@ class GenerateReportView(APIView):
             to_date = date_range.get('to')
             if from_date:
                 try:
-                    from_datetime = datetime.datetime.fromisoformat(from_date.replace('Z', '+00:00'))
+                    from_datetime = datetime.fromisoformat(from_date.replace('Z', '+00:00'))
+                    # Ensure timezone awareness
+                    if timezone.is_naive(from_datetime):
+                        from_datetime = timezone.make_aware(from_datetime)
                     date_filter['date__gte'] = from_datetime
                 except (ValueError, TypeError):
                     pass  
             if to_date:
                 try:
-                    to_datetime = datetime.datetime.fromisoformat(to_date.replace('Z', '+00:00'))
+                    to_datetime = datetime.fromisoformat(to_date.replace('Z', '+00:00'))
+                    # Ensure timezone awareness
+                    if timezone.is_naive(to_datetime):
+                        to_datetime = timezone.make_aware(to_datetime)
                     to_datetime = to_datetime.replace(hour=23, minute=59, second=59)
                     date_filter['date__lte'] = to_datetime
                 except (ValueError, TypeError):

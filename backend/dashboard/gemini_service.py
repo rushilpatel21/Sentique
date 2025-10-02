@@ -274,6 +274,16 @@ Based *only* on the provided review texts, generate the following analysis:
             # For newer API versions, use the parts accessor
             response_text = response.candidates[0].content.parts[0].text
         
+        # Clean up markdown code blocks if present (Gemini sometimes wraps JSON in ```json ... ```)
+        response_text = response_text.strip()
+        if response_text.startswith("```json"):
+            response_text = response_text[7:]  # Remove ```json
+        elif response_text.startswith("```"):
+            response_text = response_text[3:]  # Remove ```
+        if response_text.endswith("```"):
+            response_text = response_text[:-3]  # Remove trailing ```
+        response_text = response_text.strip()
+        
         result = json.loads(response_text)
 
         # Validate the structure
