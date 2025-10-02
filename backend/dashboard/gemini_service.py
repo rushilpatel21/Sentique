@@ -166,8 +166,8 @@ def _analyze_with_gemini(reviews: List[str], category: str, date_range: str) -> 
     """
     Use Gemini API for more sophisticated, synthesized analysis focusing on themes.
     """
-    # Sampling strategy 
-    MAX_REVIEWS_FOR_PROMPT = 200  # Keep the sample size manageable
+    # Sampling strategy - reduced to avoid 504 timeout errors
+    MAX_REVIEWS_FOR_PROMPT = 50  # Reduced from 200 to 50 to prevent API timeouts
     if len(reviews) > MAX_REVIEWS_FOR_PROMPT:
         step = max(1, len(reviews) // MAX_REVIEWS_FOR_PROMPT)
         sampled_reviews = [reviews[i] for i in range(0, len(reviews), step)][:MAX_REVIEWS_FOR_PROMPT]
@@ -235,8 +235,10 @@ Based *only* on the provided review texts, generate the following analysis:
 **Generate the JSON output now based on the provided reviews.**
 """
 
-    # Initialize the model (using 1.5 Pro as it's generally better for nuanced tasks)
-    model = genai.GenerativeModel(model_name="gemini-2.5-flash")
+    # Initialize the model
+    model_name = "gemini-2.5-flash"
+    print(f"Using Gemini model: {model_name}")
+    model = genai.GenerativeModel(model_name=model_name)
 
     # Configure safety settings
     safety_settings = [

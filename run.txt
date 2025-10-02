@@ -1,0 +1,6 @@
+cd frontend
+pnpm dev
+
+
+cd backend
+python manage.py runserver
